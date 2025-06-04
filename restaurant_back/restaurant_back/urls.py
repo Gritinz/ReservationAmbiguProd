@@ -36,7 +36,7 @@ urlpatterns = [
 
     # Réinitialisation du mot de passe
     path('api/password-reset/', PasswordResetRequestView.as_view(), name='password_reset_request'),
-    path('api/password-reset/<int:user_id>/<str:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('backoffice/api/password-reset/<int:user_id>/<str:token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 
     # Récupération CSRF token
     path('backoffice/api/get-csrf-token/', get_csrf_token, name='get_csrf_token'),

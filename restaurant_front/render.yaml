@@ -1,0 +1,6 @@
+# frontend/render.yaml
+
+routes:
+  - type: rewrite
+    source: /reset-password/:path*
+    destination: /index.html

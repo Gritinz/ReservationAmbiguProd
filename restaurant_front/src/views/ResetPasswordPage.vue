@@ -56,7 +56,7 @@ export default {
 
         // Envoie la requête vers le bon endpoint
         const response = await this.$axios.post(
-          `/api/password-reset/${this.uidb64}/${this.token}/`,
+          `/backoffice/api/password-reset/${this.uidb64}/${this.token}/`,
           { new_password: this.newPassword1 }
         );
 
