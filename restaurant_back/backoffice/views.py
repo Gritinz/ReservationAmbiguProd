@@ -16,8 +16,8 @@ from django.db import transaction  # Pour éviter les états inconsistants
 
 import logging
 
-from restaurant_back.backoffice.models import ExceptionalSchedule, PasswordResetToken, Reservation
-from restaurant_back.backoffice.serializers import ExceptionalScheduleSerializer, ReservationSerializer
+from backoffice.models import ExceptionalSchedule, PasswordResetToken, Reservation
+from backoffice.serializers import ExceptionalScheduleSerializer, ReservationSerializer
 
 # Initialisation du logger
 logger = logging.getLogger(__name__)
