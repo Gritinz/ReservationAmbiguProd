@@ -3,7 +3,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from backoffice.views import check_admin, get_csrf_token, PasswordResetRequestView, PasswordResetConfirmView
+from backoffice.views import check_admin, get_csrf_token, PasswordResetRequestView, PasswordResetConfirmView, password_reset_confirm_html
 from django.http import JsonResponse
 
 # Vue simple pour l'endpoint racine
@@ -40,4 +40,6 @@ urlpatterns = [
 
     # Récupération CSRF token
     path('backoffice/api/get-csrf-token/', get_csrf_token, name='get_csrf_token'),
+    
+    path('reset-password/<int:user_id>/<str:token>/', password_reset_confirm_html, name='password_reset_confirm_html'),
 ]

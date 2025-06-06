@@ -63,7 +63,9 @@ class PasswordResetRequestView(APIView):
         logger.debug(f"Token généré : {token}")  # <- Log du token généré
 
         # 🌐 Lien vers ton frontend de réinitialisation
-        reset_link = f"https://restaurant-front-g5jd.onrender.com/reset-password/{user.id}/{token}/" 
+        protocol = "https" if not settings.DEBUG else "http"
+        domain = settings.DOMAIN_NAME  # Doit être défini dans settings.py
+        reset_link = f"{protocol}://{domain}/reset-password/{user.id}/{token}/"
         logger.info(f"Lien de réinitialisation généré : {reset_link}")  # <- Log du lien généré
 
         # 📨 Préparation de l'email
@@ -188,3 +190,22 @@ def get_csrf_token(request):
     """
     csrf_token = get_token(request)
     return JsonResponse({'csrfToken': csrf_token})
+
+from django.shortcuts import render
+from django.http import HttpResponseNotFound
+
+def password_reset_confirm_html(request, user_id, token):
+    """
+    Vue serve-side pour afficher la page de réinitialisation du mot de passe.
+    """
+    try:
+        reset_token = PasswordResetToken.objects.select_related('user').get(user_id=user_id, token=token)
+        if not reset_token.is_valid():
+            return HttpResponseNotFound("Lien expiré ou invalide.")
+    except PasswordResetToken.DoesNotExist:
+        return HttpResponseNotFound("Lien invalide.")
+
+    return render(request, 'password_reset_confirm.html', {
+        'user_id': user_id,
+        'token': token
+    })

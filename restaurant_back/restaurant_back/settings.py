@@ -15,6 +15,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key-for-dev')  # fall
 # DEBUG en fonction de l'environnement
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
+DOMAIN_NAME = os.getenv("DOMAIN_NAME", "localhost:8000")
+
 # ALLOWED_HOSTS
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
