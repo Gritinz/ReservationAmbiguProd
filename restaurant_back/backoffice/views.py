@@ -55,7 +55,7 @@ class PasswordResetRequestView(APIView):
         token = get_random_string(60)
 
         # Lien vers ton frontend de réinitialisation
-        reset_link = f"https://reservation-ambigu-prod.vercel.app/reset-password/{user.id}/{token}/" 
+        reset_link = f"https://restaurant-front-g5jd.onrender.com/reset-password/{user.id}/{token}/" 
 
         subject = "Réinitialisation de votre mot de passe"
         message = f"""
