@@ -31,32 +31,39 @@ export default {
     };
   },
   async created() {
-    try {
-      await this.$axios.get('/backoffice/api/get-csrf-token/');
-    } catch (e) {
-      console.error("Erreur lors de la récupération du token CSRF:", e);
-    }
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://restaurant-back-h79s.onrender.com'; 
 
     if (!this.uidb64 || !this.token) {
       this.isValidLink = false;
-      this.message = "Le lien de réinitialisation est incomplet ou invalide.";
+      this.message = 'Lien incomplet ou invalide.';
+      return;
+    }
+
+    try {
+      // Optionnel : vérifie si le token est valide dès le début
+      const response = await this.$axios.head(`${BACKEND_URL}/api/check-token/${this.uidb64}/${this.token}/`);
+      this.isValidLink = response.data.valid ?? true;
+    } catch (error) {
+      this.isValidLink = false;
+      this.message = 'Le lien est invalide ou a expiré.';
     }
   },
   methods: {
     async resetPassword() {
-      try {
-        this.message = '';
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://restaurant-back-h79s.onrender.com'; 
+
+      this.message = '';
+      this.isSuccess = false;
+
+      if (this.newPassword1 !== this.newPassword2) {
+        this.message = 'Les mots de passe ne correspondent pas.';
         this.isSuccess = false;
+        return;
+      }
 
-        if (this.newPassword1 !== this.newPassword2) {
-          this.message = 'Les mots de passe ne correspondent pas.';
-          this.isSuccess = false;
-          return;
-        }
-
-        // Envoie la requête vers le bon endpoint
+      try {
         const response = await this.$axios.post(
-          `/backoffice/api/password-reset/${this.uidb64}/${this.token}/`,
+          `${BACKEND_URL}/api/password-reset-confirm/${this.uidb64}/${this.token}/`,
           { new_password: this.newPassword1 }
         );
 
@@ -68,13 +75,13 @@ export default {
         }, 3000);
 
       } catch (error) {
-        console.error("Erreur lors de la réinitialisation du mot de passe :", error);
+        console.error('Erreur lors de la réinitialisation du mot de passe :', error);
         this.isSuccess = false;
 
-        if (error.response && error.response.status === 400) {
+        if (error.response?.status === 400) {
           this.message = 'Le lien est invalide ou a expiré.';
           this.isValidLink = false;
-        } else if (error.response && error.response.data && error.response.data.error) {
+        } else if (error.response?.data?.error) {
           this.message = error.response.data.error;
         } else {
           this.message = 'Une erreur est survenue. Veuillez réessayer.';
