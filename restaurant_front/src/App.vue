@@ -1,5 +1,4 @@
 <template>
-  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/7.4.47/css/materialdesignicons.min.css"> 
   <div>
     <router-view />
   </div>
